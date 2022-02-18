@@ -31,7 +31,7 @@ const useUrlState = <S extends UrlState = UrlState>(
   options?: Options,
 ) => {
   type State = Partial<{ [key in keyof S]: any }>;
-  const { navigateMode = 'push', parseOptions, stringifyOptions } = options || {};
+  const { navigateMode = 'replace', parseOptions, stringifyOptions } = options || {};
 
   const mergedParseOptions = { ...baseParseConfig, ...parseOptions };
   const mergedStringifyOptions = { ...baseStringifyConfig, ...stringifyOptions };
@@ -71,6 +71,7 @@ const useUrlState = <S extends UrlState = UrlState>(
       history[navigateMode]({
         hash: location.hash,
         search: stringify({ ...queryFromUrl, ...newQuery }, mergedStringifyOptions) || '?',
+        state: history.state,
       });
     }
     if (navigate) {
@@ -81,6 +82,7 @@ const useUrlState = <S extends UrlState = UrlState>(
         },
         {
           replace: navigateMode === 'replace',
+          state: location.state,
         },
       );
     }
